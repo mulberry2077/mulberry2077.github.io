@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fractal Zoom</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background-color: #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fractalCanvas" width="800" height="800"></canvas>
+  <script>
+    const canvas = document.getElementById('fractalCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const width = canvas.width;
+    const height = canvas.height;
+
+    let offsetX = 0;
+    let offsetY = 0;
+    let zoom = 1;
+
+    function mandelbrot(x, y) {
+      let real = x;
+      let imag = y;
+
+      for (let i = 0; i < 1000; i++) {
+        const r2 = real * real;
+        const i2 = imag * imag;
+
+        if (r2 + i2 > 4) {
+          return (i / 1000);
+        }
+
+        imag = 2 * real * imag + y;
+        real = r2 - i2 + x;
+      }
+
+      return 0;
+    }
+
+    function drawFractal() {
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      const x0 = (x - width / 2) / zoom + offsetX;
+      const y0 = (y - height / 2) / zoom + offsetY;
+
+      const m = mandelbrot(x0 / width * 4 - 2, y0 / height * 4 - 2);
+      const color = Math.floor(m * 255);
+
+      ctx.fillStyle = `rgb(${color}, ${color}, ${color})`;
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }
+}
+
+
+    canvas.addEventListener('click', (event) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const x0 = (x - width / 2) / zoom;
+      const y0 = (y - height / 2) / zoom;
+      
+      offsetX += x0;
+      offsetY += y0;
+      zoom *= 2;
+
+      drawFractal();
+    });
+
+    drawFractal();
+  </script>
+</body>
+</html>
