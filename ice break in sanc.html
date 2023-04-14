@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>クリックで中央に異なるセットのランダム単語を表示</title>
+  <style>
+    /* グラデーション */
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(to bottom, #2a1277, #070615);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    /* パーティクル */
+    #particle-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.8);
+      pointer-events: none;
+      transition: all 1s ease-in-out;
+      animation: move 10s infinite;
+    }
+    @keyframes move {
+      0% {
+        transform: translateY(-10px) translateX(-10px) scale(0);
+      }
+      20% {
+        transform: translateY(0) translateX(0) scale(1);
+      }
+      80% {
+        transform: translateY(0) translateX(0) scale(1);
+      }
+      100% {
+        transform: translateY(10px) translateX(10px) scale(0);
+      }
+    }
+
+   
+    h1 {
+      font-size: 72px;
+      margin: 10px;
+      color: #FFFFFF; /* または color: white; */
+    }
+    h3 {
+      font-size: 32px;
+  position: fixed;
+  bottom: 100px; /* 画面下端からの距離を調整 */
+  left: 54%;
+  transform: translateX(-50%); /* 中央揃え */
+  color: #FFFFFF; /* 文字色を白に設定（任意） */
+}
+
+  </style>
+</head>
+<body>
+  <div id="particle-container"></div>
+  <h3>について話そう！</h3>
+  <script>
+    function createTextElement(text, onClick) {
+      const textElement = document.createElement('h1');
+      textElement.innerText = text;
+      textElement.style.cursor = 'pointer';
+      textElement.addEventListener('click', onClick);
+
+      document.body.appendChild(textElement);
+      return textElement;
+    }
+
+    function getRandomWord(words) {
+      const randomIndex = Math.floor(Math.random() * words.length);
+      return words[randomIndex];
+    }
+
+    function updateRandomWord(textElement, words) {
+      const randomWord = getRandomWord(words);
+      textElement.innerText = randomWord;
+    }
+
+    const firstWordSet = ["あなたが考える", "メタバース的", "普遍的", "最先端な", "革新的", "感動的", "未来的", "現代的", "人間的", "cluster的"];
+
+    const secondWordSet = ["エンタメ", "ゲーム", "映画", "本", "音楽", "空間", "アート", "科学", "テクノロジー", "教育", "文化", "社会", "哲学", "経済", "アイデンティティ", "コミュニケーション", "謎"];
+    const firstTextElement = createTextElement('?????', () => {
+  updateRandomWord(firstTextElement, firstWordSet);
+});
+
+const secondTextElement = createTextElement('?????', () => {
+  updateRandomWord(secondTextElement, secondWordSet);
+});
+
+// パーティクルエフェクト
+var particleContainer = document.getElementById('particle-container');
+for (var i = 0; i < 50; i++) {
+  var particle = document.createElement('div');
+  particle.className = 'particle';
+  particle.style.top = Math.random() * 100 + '%';
+  particle.style.left = Math.random() * 100 + '%';
+  particle.style.animationDelay = Math.random() * 10 + 's';
+  particleContainer.appendChild(particle);
+}
+</script>
+</body>
+</html>
